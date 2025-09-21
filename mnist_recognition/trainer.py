@@ -93,9 +93,9 @@ class MNISTTrainer:
 
         return avg_loss, accuracy
 
-    def test(self) -> Tuple[float, float]:
+    def evaluate(self) -> Tuple[float, float]:
         """
-        Test model performance
+        Evaluate model performance on test dataset
 
         Returns:
             tuple: (average loss, accuracy)
@@ -143,25 +143,25 @@ class MNISTTrainer:
             # 训练一个 epoch
             train_loss, train_acc = self.train_epoch(epoch)
 
-            # 测试模型
-            test_loss, test_acc = self.test()
+            # 评估模型
+            eval_loss, eval_acc = self.evaluate()
 
             # 记录历史
             self.train_losses.append(train_loss)
             self.train_accuracies.append(train_acc)
-            self.test_losses.append(test_loss)
-            self.test_accuracies.append(test_acc)
+            self.test_losses.append(eval_loss)
+            self.test_accuracies.append(eval_acc)
 
             # 打印结果
             epoch_time = time.time() - start_time
             print(f'Epoch {epoch}/{epochs} - '
                   f'Training Loss: {train_loss:.4f}, Training Accuracy: {train_acc:.2f}% - '
-                  f'Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.2f}% - '
+                  f'Test Loss: {eval_loss:.4f}, Test Accuracy: {eval_acc:.2f}% - '
                   f'Cost Time: {epoch_time:.2f}s')
 
             # 保存最佳模型
-            if test_acc > best_accuracy and save_model:
-                best_accuracy = test_acc
+            if eval_acc > best_accuracy and save_model:
+                best_accuracy = eval_acc
                 self.save_model(model_path)
                 print(f'Model saved, test accuracy: {best_accuracy:.2f}%')
 
@@ -179,15 +179,8 @@ class MNISTTrainer:
         # 确保目录存在
         os.makedirs(os.path.dirname(path), exist_ok=True)
 
-        # 保存模型状态字典
-        torch.save({
-            'model_state_dict': self.model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'train_losses': self.train_losses,
-            'train_accuracies': self.train_accuracies,
-            'test_losses': self.test_losses,
-            'test_accuracies': self.test_accuracies
-        }, path)
+        # 只保存模型参数
+        torch.save(self.model.state_dict(), path)
 
     def load_model(self, path: str) -> None:
         """
@@ -199,13 +192,8 @@ class MNISTTrainer:
         if not os.path.exists(path):
             raise FileNotFoundError(f"Model file {path} does not exist")
 
-        checkpoint = torch.load(path, map_location=self.device)
-        self.model.load_state_dict(checkpoint['model_state_dict'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
-        self.train_losses = checkpoint['train_losses']
-        self.train_accuracies = checkpoint['train_accuracies']
-        self.test_losses = checkpoint['test_losses']
-        self.test_accuracies = checkpoint['test_accuracies']
+        model_state_dict = torch.load(path, map_location=self.device)
+        self.model.load_state_dict(model_state_dict)
         print(f'Model loaded from {path}')
 
     def get_training_history(self) -> Dict[str, List[float]]:
