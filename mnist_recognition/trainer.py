@@ -93,7 +93,7 @@ class MNISTTrainer:
 
         return avg_loss, accuracy
 
-    def evaluate(self) -> Tuple[float, float]:
+    def test(self) -> Tuple[float, float]:
         """
         Evaluate model performance on test dataset
 
@@ -144,7 +144,7 @@ class MNISTTrainer:
             train_loss, train_acc = self.train_epoch(epoch)
 
             # 评估模型
-            eval_loss, eval_acc = self.evaluate()
+            eval_loss, eval_acc = self.test()
 
             # 记录历史
             self.train_losses.append(train_loss)

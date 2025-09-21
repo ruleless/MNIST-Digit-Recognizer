@@ -48,7 +48,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '--model_type',
         type=str,
-        default='simple',
+        default='cnn',
         choices=['cnn', 'simple'],
         help='模型类型: cnn(卷积神经网络，准确率更高), simple(简单神经网络，训练更快)'
     )
