@@ -17,9 +17,14 @@ class MNISTTrainer:
     # 默认学习率
     DEFAULT_LEARNING_RATE = 0.001
 
-    def __init__(self, model: nn.Module, train_loader: DataLoader,
-                 test_loader: DataLoader, device: str = 'cpu',
-                 lr: float = DEFAULT_LEARNING_RATE) -> None:
+    def __init__(
+        self,
+        model: nn.Module,
+        train_loader: DataLoader,
+        test_loader: DataLoader,
+        device: str = "cpu",
+        lr: float = DEFAULT_LEARNING_RATE,
+    ) -> None:
         """
         Initialize trainer
 
@@ -119,8 +124,9 @@ class MNISTTrainer:
 
         return avg_loss, accuracy
 
-    def train(self, epochs: int, save_model: bool = True,
-              model_path: str = 'mnist_model.pth') -> None:
+    def train(
+        self, epochs: int, save_model: bool = True, model_path: str = "mnist_model.pth"
+    ) -> None:
         """
         Train model
 
@@ -144,30 +150,32 @@ class MNISTTrainer:
             train_loss, train_acc = self.train_epoch(epoch)
 
             # 评估模型
-            eval_loss, eval_acc = self.test()
+            test_loss, test_acc = self.test()
 
             # 记录历史
             self.train_losses.append(train_loss)
             self.train_accuracies.append(train_acc)
-            self.test_losses.append(eval_loss)
-            self.test_accuracies.append(eval_acc)
+            self.test_losses.append(test_loss)
+            self.test_accuracies.append(test_acc)
 
             # 打印结果
             epoch_time = time.time() - start_time
-            print(f'Epoch {epoch}/{epochs} - '
-                  f'Training Loss: {train_loss:.4f}, Training Accuracy: {train_acc:.2f}% - '
-                  f'Test Loss: {eval_loss:.4f}, Test Accuracy: {eval_acc:.2f}% - '
-                  f'Cost Time: {epoch_time:.2f}s')
+            print(
+                f"Epoch {epoch}/{epochs} - "
+                f"Training Loss: {train_loss:.4f}, Training Accuracy: {train_acc:.2f}% - "
+                f"Test Loss: {test_loss:.4f}, Test Accuracy: {test_acc:.2f}% - "
+                f"Cost Time: {epoch_time:.2f}s"
+            )
 
             # 保存最佳模型
-            if eval_acc > best_accuracy and save_model:
-                best_accuracy = eval_acc
+            if test_acc > best_accuracy and save_model:
+                best_accuracy = test_acc
                 self.save_model(model_path)
-                print(f'Model saved, test accuracy: {best_accuracy:.2f}%')
+                print(f"Model saved, test accuracy: {best_accuracy:.2f}%")
 
-            print('-' * 80)
+            print("-" * 80)
 
-        print(f'Training completed! Best test accuracy: {best_accuracy:.2f}%')
+        print(f"Training completed! Best test accuracy: {best_accuracy:.2f}%")
 
     def save_model(self, path: str) -> None:
         """

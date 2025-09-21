@@ -1,6 +1,6 @@
 """MNIST 数据加载器模块"""
 
-from typing import Dict, Tuple
+from typing import Dict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,16 +41,6 @@ class MNISTDataLoader:
 
         # 创建数据加载器
         self._create_data_loaders()
-
-    @property
-    def _datasets(self) -> Tuple[Dataset, Dataset]:
-        """获取训练集和测试集的元组"""
-        return (self.train_dataset, self.test_dataset)
-
-    @property
-    def _loaders(self) -> Tuple[DataLoader, DataLoader]:
-        """获取训练和测试数据加载器的元组"""
-        return (self.train_loader, self.test_loader)
 
     def _load_datasets(self) -> None:
         """加载训练集和测试集"""
