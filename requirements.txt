@@ -1,5 +1,6 @@
-torch>=1.9.0
-torchvision>=0.10.0
+# CUDA 11.8 版本的 PyTorch
+torch==2.0.1+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+torchvision==0.15.2+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 numpy>=1.19.0
 matplotlib>=3.3.0
 scikit-learn>=0.24.0
